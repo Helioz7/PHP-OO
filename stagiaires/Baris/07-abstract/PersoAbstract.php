@@ -26,9 +26,16 @@ abstract class PersoAbstract{
 
     // méthodes abstraites, elles sont déclarées dans la classe abstraite, pour obliger
     // les héritiers à redéclarer ces méthodes en public ou protected
+    // On les applique ici à des getters et setters, c'est plutôt rare
+    abstract public function setHealthPoint(int $health);
+    abstract public function getHealthPoint(): int;
+
+    abstract public function setExperience(int $exp);
+    abstract public function getExperience(): int;
+
+    // Plus courant, des méthodes qui seront obligatoires pour tous les persos
     abstract public function attack($enemy);
     abstract public function defence();
-    abstract protected function initPerso();
 
 
     // méthode __construct qui sera héritée
@@ -49,11 +56,18 @@ abstract class PersoAbstract{
     /**
      * @throws \Random\RandomException
      */
-    public function throwSmallDice(int $number=1): array
+    public function throwSmallDice(int $number=1, bool $addition = true): array
     {
         $dice = array();
         for($i=1; $i<=$number; $i++){
-            $dice[$i] = random_int(1,self::THROW_DICE_SMALL);
+            /*
+            if($addition){
+                $dice[$i] = random_int(1,self::THROW_DICE_SMALL);
+            }else{
+                $int -= random_int(1,self::THROW_DICE_SMALL);
+            }*/
+            // ternaire positif/négatif
+            $dice[$i] = $addition ? random_int(1,self::THROW_DICE_SMALL) : - random_int(1,self::THROW_DICE_SMALL);
         }
         return $dice;
     }
@@ -61,12 +75,12 @@ abstract class PersoAbstract{
     /**
      * @throws \Random\RandomException
      */
-    public function throwBigDice(int $number=1): array
+    public function throwBigDice(int $number=1, bool $addition = true): array
     {
         $dice = array();
         for($i=1; $i<=$number; $i++){
             // ternaire positif/négatif
-            $dice[$i] = random_int(1,self::THROW_DICE_BIG);
+            $dice[$i] = $addition ? random_int(1,self::THROW_DICE_BIG) : - random_int(1,self::THROW_DICE_BIG);
         }
         return $dice;
     }
@@ -126,25 +140,6 @@ abstract class PersoAbstract{
         }
     }
 
-    public function getHealthPoint(): int
-    {
-        return $this->healthPoint;
-    }
-
-    public function setHealthPoint(int $health): void
-    {
-        $this->healthPoint = $health;
-    }
-
-    public function getExperience(): int
-    {
-        return $this->experience;
-    }
-
-    public function setExperience($experience): void
-    {
-        $this->experience = $experience;
-    }
 
 
 }
